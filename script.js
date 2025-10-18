@@ -193,9 +193,8 @@ class CertificateGenerator {
             const imgHeight = 210;
             pdf.addImage(canvasData, 'JPEG', 0, 0, imgWidth, imgHeight);
             
-            // Create filename with just the student's name
-            const firstName = studentName.split(' ')[0].toLowerCase();
-            const fileName = `${firstName}.pdf`;
+            // Create filename with full student name using underscores
+            const fileName = `${studentName.replace(/\s+/g, '_')}.pdf`;
             
             // Download the PDF
             pdf.save(fileName);
