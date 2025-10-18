@@ -132,7 +132,7 @@ class CertificateGenerator {
 
         // Event Name - positioned in the blank space (moved left from center)
         this.ctx.font = 'bold 22px "Times New Roman", serif';
-        this.ctx.fillText(eventName.toUpperCase(), 350, 520);
+        this.ctx.fillText(eventName.toUpperCase(), 300, 520);
 
         console.log(`Certificate generated for: ${studentName} from ${collegeName} for ${eventName}`);
     }
