@@ -29,6 +29,19 @@ class CertificateGenerator {
             }
         });
 
+        // Department dropdown change
+        document.getElementById('department').addEventListener('change', (e) => {
+            const customDepartmentInput = document.getElementById('customDepartment');
+            if (e.target.value === 'other') {
+                customDepartmentInput.style.display = 'block';
+                customDepartmentInput.required = true;
+            } else {
+                customDepartmentInput.style.display = 'none';
+                customDepartmentInput.required = false;
+                customDepartmentInput.value = '';
+            }
+        });
+
         // Download button
         document.getElementById('downloadBtn').addEventListener('click', () => {
             this.downloadCertificate();
@@ -52,12 +65,15 @@ class CertificateGenerator {
 
     generateCertificate() {
         const studentName = document.getElementById('studentName').value.trim();
+        const year = document.getElementById('year').value;
+        const departmentSelect = document.getElementById('department').value;
+        const customDepartment = document.getElementById('customDepartment').value.trim();
         const collegeSelect = document.getElementById('college').value;
         const customCollege = document.getElementById('customCollege').value.trim();
         const event = document.getElementById('event').value;
 
         // Validation
-        if (!studentName || !event) {
+        if (!studentName || !year || !departmentSelect || !event) {
             this.showMessage('Please fill in all required fields.', 'error');
             return;
         }
@@ -67,7 +83,16 @@ class CertificateGenerator {
             return;
         }
 
+        if (departmentSelect === 'other' && !customDepartment) {
+            this.showMessage('Please enter your department name.', 'error');
+            return;
+        }
+
         const collegeName = collegeSelect === 'other' ? customCollege : collegeSelect;
+        const departmentName = departmentSelect === 'other' ? customDepartment : departmentSelect;
+        
+        // Combine student name with year and department
+        const fullStudentName = `${studentName} - ${year} - ${departmentName}`;
 
         // Show loading
         const submitBtn = document.querySelector('form button');
@@ -77,7 +102,7 @@ class CertificateGenerator {
 
         // Generate certificate after a short delay to show loading
         setTimeout(() => {
-            this.drawCertificate(studentName, collegeName, event);
+            this.drawCertificate(fullStudentName, collegeName, event);
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
             
@@ -99,9 +124,8 @@ class CertificateGenerator {
         this.ctx.fillStyle = '#000000';
         this.ctx.textBaseline = 'middle';
 
-        // Student Name - positioned at Y=420 (perfect alignment - reference for others)
-        this.ctx.font = 'bold 22px "Times New Roman", serif';
-        this.ctx.fillText(studentName.toUpperCase(), 540, 420);
+        // Student Name - single line with font size adjustment for long combined names
+        this.drawSingleLineName(studentName.toUpperCase(), 590, 420, 22, 700);
 
         // College Name - with dynamic fitting for long names
         this.drawFittedText(collegeName.toUpperCase(), 400, 470, 22, 550);
@@ -173,9 +197,41 @@ class CertificateGenerator {
         });
     }
 
+    // Single line text with font size adjustment (for student names with dept/year)
+    drawSingleLineName(text, x, y, baseFontSize, maxWidth) {
+        let fontSize = baseFontSize;
+        
+        // Start with base font size and measure text width
+        this.ctx.font = `bold ${fontSize}px "Times New Roman", serif`;
+        let textWidth = this.ctx.measureText(text).width;
+        
+        // If text is too wide, reduce font size until it fits (minimum 12px for very long names)
+        while (textWidth > maxWidth && fontSize > 12) {
+            fontSize -= 0.5; // Reduce by smaller increments for finer control
+            this.ctx.font = `bold ${fontSize}px "Times New Roman", serif`;
+            textWidth = this.ctx.measureText(text).width;
+        }
+        
+        // If still too wide at minimum font size, use a slightly smaller font
+        if (textWidth > maxWidth && fontSize <= 12) {
+            fontSize = Math.max(10, fontSize - 1);
+            this.ctx.font = `bold ${fontSize}px "Times New Roman", serif`;
+        }
+        
+        // Always draw as single line, perfectly centered
+        this.ctx.fillText(text, x, y);
+        
+        console.log(`Student Name: "${text}" | Font Size: ${fontSize}px | Width: ${textWidth}px | Max: ${maxWidth}px`);
+    }
+
     downloadCertificate() {
         try {
             const studentName = document.getElementById('studentName').value.trim();
+            const year = document.getElementById('year').value;
+            const departmentSelect = document.getElementById('department').value;
+            const customDepartment = document.getElementById('customDepartment').value.trim();
+            const departmentName = departmentSelect === 'other' ? customDepartment : departmentSelect;
+            const fullStudentName = `${studentName} - ${year} - ${departmentName}`;
             
             // Get canvas data as image
             const canvasData = this.canvas.toDataURL('image/jpeg', 0.95);
@@ -194,7 +250,7 @@ class CertificateGenerator {
             pdf.addImage(canvasData, 'JPEG', 0, 0, imgWidth, imgHeight);
             
             // Create filename with full student name using underscores
-            const fileName = `${studentName.replace(/\s+/g, '_')}.pdf`;
+            const fileName = `${fullStudentName.replace(/\s+/g, '_').replace(/-/g, '_')}.pdf`;
             
             // Download the PDF
             pdf.save(fileName);
@@ -249,22 +305,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize certificate generator
     const generator = new CertificateGenerator();
 
-    // Format student name input (capitalize first letters)
-    const studentNameInput = document.getElementById('studentName');
-    studentNameInput.addEventListener('input', function(e) {
-        const words = e.target.value.split(' ');
-        const capitalizedWords = words.map(word => {
-            if (word.length > 0) {
-                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-            }
-            return word;
-        });
-        e.target.value = capitalizedWords.join(' ');
-    });
+    // Student name input - no auto-formatting to avoid editing issues
 
     // Format custom college input
     const customCollegeInput = document.getElementById('customCollege');
     customCollegeInput.addEventListener('input', function(e) {
+        e.target.value = e.target.value.toUpperCase();
+    });
+
+    // Format custom department input
+    const customDepartmentInput = document.getElementById('customDepartment');
+    customDepartmentInput.addEventListener('input', function(e) {
         e.target.value = e.target.value.toUpperCase();
     });
 
