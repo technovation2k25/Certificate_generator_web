@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Generator - Technovation 2K25</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            <h1>Certificate Generator</h1>
+            <h2>Technovation 2K25 - National Level Innovative Technical Fest</h2>
+            
+            <form id="certificateForm">
+                <div class="form-group">
+                    <label for="studentName">Student Name:</label>
+                    <input type="text" id="studentName" name="studentName" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="college">College:</label>
+                    <select id="college" name="college" required>
+                        <option value="">Select your college</option>
+                        <option value="MAILAM ENGINEERING COLLEGE">MAILAM ENGINEERING COLLEGE</option>
+                        <option value="SRI MANAKULA VINAYAGAR ENGINEERING COLLEGE">SRI MANAKULA VINAYAGAR ENGINEERING COLLEGE</option>
+                        <option value="MANAKULA VINAYAGAR INSTITUTE OF TECHNOLOGY">MANAKULA VINAYAGAR INSTITUTE OF TECHNOLOGY</option>
+                        <option value="IFET COLLEGE OF ENGINEERING">IFET COLLEGE OF ENGINEERING</option>
+                        <option value="SURYA ENGINEERING COLLEGE">SURYA ENGINEERING COLLEGE</option>
+                        <option value="VRS COLLEGE OF ENGINEERING AND TECHNOLOGY">VRS COLLEGE OF ENGINEERING AND TECHNOLOGY</option>
+                        <option value="UNIVERSITY COLLEGE OF ENGINEERING">UNIVERSITY COLLEGE OF ENGINEERING</option>
+                        <option value="THEIVANAI AMMAL COLLEGE FOR WOMEN">THEIVANAI AMMAL COLLEGE FOR WOMEN</option>
+                        <option value="SRI RANGAPOOPATHI COLLEGE OF ENGINEERING">SRI RANGAPOOPATHI COLLEGE OF ENGINEERING</option>
+                        <option value="SKP ENGINEERING COLLEGE">SKP ENGINEERING COLLEGE</option>
+                        <option value="ARUNAI ENGINEERING COLLEGE">ARUNAI ENGINEERING COLLEGE</option>
+                        <option value="RAJIV GANDHI COLLEGE OF ENGINEERING AND TECHNOLOGY">RAJIV GANDHI COLLEGE OF ENGINEERING AND TECHNOLOGY</option>
+                        <option value="PUDUCHERRY TECHNOLOGICAL UNIVERSITY">PUDUCHERRY TECHNOLOGICAL UNIVERSITY</option>
+                        <option value="KRISHNASAMY COLLEGE OF ENGINEERING AND TECHNOLOGY">KRISHNASAMY COLLEGE OF ENGINEERING AND TECHNOLOGY</option>
+                        <option value="JEPPIAAR ENGINEERING COLLEGE">JEPPIAAR ENGINEERING COLLEGE</option>
+                        <option value="DHAANISH AHMED COLLEGE OF ENGINEERING">DHAANISH AHMED COLLEGE OF ENGINEERING</option>
+                        <option value="CK COLLEGE OF ENGINEERING AND TECHNOLOGY">CK COLLEGE OF ENGINEERING AND TECHNOLOGY</option>
+                        <option value="AR ENGINEERING COLLEGE">AR ENGINEERING COLLEGE</option>
+                        <option value="other">Other (Type manually)</option>
+                    </select>
+                    <input type="text" id="customCollege" name="customCollege" placeholder="Enter your college name" style="display: none;">
+                </div>
+
+                <div class="form-group">
+                    <label for="event">Event Name:</label>
+                    <select id="event" name="event" required>
+                        <option value="">Select an event</option>
+                        <option value="IDEATHON">IDEATHON</option>
+                        <option value="TECHNOQUEST">TECHNOQUEST</option>
+                        <option value="CONNECTIONS">CONNECTIONS</option>
+                        <option value="MEMES MANIA">MEMES MANIA</option>
+                        <option value="CRYPTIC HUNT">CRYPTIC HUNT</option>
+                    </select>
+                </div>
+
+                <button type="submit">Generate Certificate</button>
+            </form>
+        </div>
+
+        <div class="certificate-section" id="certificateSection" style="display: none;">
+            <h2>Your Certificate</h2>
+            <div class="certificate-container">
+                <canvas id="certificateCanvas" width="1080" height="810"></canvas>
+            </div>
+            <div class="certificate-actions">
+                <button id="downloadBtn">Download Certificate</button>
+                <button id="generateNewBtn">Generate New Certificate</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
